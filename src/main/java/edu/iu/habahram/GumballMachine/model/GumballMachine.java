@@ -33,56 +33,17 @@ public class GumballMachine implements IGumballMachine {
         return new TransitionResult(succeeded, message, state, count);
     }
 
-
-
     @Override
     public TransitionResult ejectQuarter() {
-        boolean succeeded = false;
-        String message = "";
-        if (state.equalsIgnoreCase(HAS_QUARTER)) {
-            state = NO_QUARTER;
-            message = "Quarter returned";
-            succeeded = true;
-        } else if (state.equalsIgnoreCase(NO_QUARTER)) {
-            message = "You haven't inserted a quarter";
-        } else if (state.equalsIgnoreCase(SOLD)) {
-            message = "Sorry, you already turned the crank";
-        } else if (state.equalsIgnoreCase(SOLD_OUT)) {
-            message = "You can't eject, you haven't inserted a quarter yet";
-        }
-        return new TransitionResult(succeeded, message, state, count);
+        //TODO
+        return null;
     }
 
     @Override
     public TransitionResult turnCrank() {
-        boolean succeeded = false;
-        String message = "";
-        if (state.equalsIgnoreCase(SOLD)) {
-            message = "Turning twice doesn't get you another gumball";
-        } else if (state.equalsIgnoreCase(NO_QUARTER)) {
-            message = "You turned but there's no quarter";
-        } else if (state.equalsIgnoreCase(SOLD_OUT)) {
-            message = "You turned but there are no gumballs";
-        } else if (state.equalsIgnoreCase(HAS_QUARTER)) {
-            message = "You turned...";
-            succeeded = true;
-            state = SOLD;
-        }
-        if (succeeded) {
-            // dispense the gumball
-            releaseBall();
-            message = "A gumball comes rolling out the slot";
-            // move to next state
-            if (count > 0) {
-                state = NO_QUARTER;
-            } else {
-                state = SOLD_OUT;
-            }
-        }
-        return new TransitionResult(succeeded, message, state, count);
+        //TODO
+        return null;
     }
-
-
 
     @Override
     public void changeTheStateTo(GumballMachineState name) {
@@ -102,9 +63,6 @@ public class GumballMachine implements IGumballMachine {
     @Override
     public void releaseBall() {
 
-        if (count > 0) {
-            count--;
-        }
     }
 
 

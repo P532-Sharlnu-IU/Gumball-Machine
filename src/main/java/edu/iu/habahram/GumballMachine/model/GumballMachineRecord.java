@@ -46,7 +46,7 @@ public final class GumballMachineRecord {
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
     public String getState() {
