@@ -55,8 +55,16 @@ public class GumballMachine2 implements IGumballMachine{
 
     @Override
     public TransitionResult turnCrank() {
-        state.turnCrank();
-        return state.dispense();
+        // first, try to turn the crank ->> only dispense if we have a quarter
+        TransitionResult crankResult = state.turnCrank();
+
+        // only if that transition succeeded do we actually dispense
+        if (crankResult.succeeded()) {
+            return state.dispense();
+        }
+
+        // otherwise, return the crankResult (which will carry the “no quarter” message)
+        return crankResult;
     }
 
     @Override
