@@ -1,9 +1,6 @@
 package edu.iu.habahram.GumballMachine.service;
 
-import edu.iu.habahram.GumballMachine.model.GumballMachine;
-import edu.iu.habahram.GumballMachine.model.GumballMachineRecord;
-import edu.iu.habahram.GumballMachine.model.IGumballMachine;
-import edu.iu.habahram.GumballMachine.model.TransitionResult;
+import edu.iu.habahram.GumballMachine.model.*;
 import edu.iu.habahram.GumballMachine.repository.IGumballRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +16,10 @@ public class GumballService implements IGumballService{
         this.gumballRepository = gumballRepository;
     }
 
-    @Override
-    public TransitionResult insertQuarter(String id) throws IOException {
+    private TransitionResult transit(String id, Transition action) throws IOException {
         GumballMachineRecord record = gumballRepository.findById(id);
-        IGumballMachine machine = new GumballMachine(record.getId(), record.getState(), record.getCount());
-        TransitionResult result = machine.insertQuarter();
+        IGumballMachine machine = new GumballMachine2(record.getId(), record.getState(), record.getCount());
+        TransitionResult result = runTheMachine(machine, action);
         if(result.succeeded()) {
             record.setState(result.stateAfter());
             record.setCount(result.countAfter());
@@ -32,33 +28,37 @@ public class GumballService implements IGumballService{
         return result;
     }
 
+    private TransitionResult runTheMachine(IGumballMachine machine, Transition action) {
+        switch (action) {
+            case INSERT_QUARTER -> {
+                return machine.insertQuarter();
+            }
+            case EJECT_QUARTER -> {
+                return machine.ejectQuarter();
+            }
+            case TURN_CRANK -> {
+                return machine.turnCrank();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public TransitionResult insertQuarter(String id) throws IOException {
+        return transit(id, Transition.INSERT_QUARTER);
+    }
+
     @Override
     public TransitionResult ejectQuarter(String id) throws IOException {
-        GumballMachineRecord record = gumballRepository.findById(id);
-        IGumballMachine machine = new GumballMachine(record.getId(), record.getState(), record.getCount());
-        TransitionResult result = machine.ejectQuarter();
-        if (result.succeeded()) {
-            record.setState(result.stateAfter());
-            record.setCount(result.countAfter());
-            save(record);
-        }
-        return result;
+        return transit(id, Transition.EJECT_QUARTER);
     }
 
     @Override
     public TransitionResult turnCrank(String id) throws IOException {
-        GumballMachineRecord record = gumballRepository.findById(id);
-        IGumballMachine machine = new GumballMachine(record.getId(), record.getState(), record.getCount());
-        TransitionResult result = machine.turnCrank();
-        if (result.succeeded()) {
-            record.setState(result.stateAfter());
-            record.setCount(result.countAfter());
-            save(record);
-        }
-        return result;
+        return transit(id, Transition.TURN_CRANK);
     }
 
-    
+
 
     @Override
     public List<GumballMachineRecord> findAll() throws IOException {
