@@ -51,4 +51,16 @@ public class SoldOutState implements IState {
     public String getTheName() {
         return GumballMachineState.OUT_OF_GUMBALLS.name();
     }
+
+    @Override
+    public TransitionResult refill(int countToAdd) {
+        gumballMachine.addGumballs(countToAdd);
+        gumballMachine.changeTheStateTo(GumballMachineState.NO_QUARTER);
+        return new TransitionResult(
+                true,
+                "Machine refilled with " + countToAdd + " gumball(s)",
+                gumballMachine.getTheStateName(),
+                gumballMachine.getCount()
+        );
+    }
 }

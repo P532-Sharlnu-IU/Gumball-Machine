@@ -1,6 +1,7 @@
 package edu.iu.habahram.GumballMachine.controllers;
 
 import edu.iu.habahram.GumballMachine.model.GumballMachineRecord;
+import edu.iu.habahram.GumballMachine.model.RefillRequest;
 import edu.iu.habahram.GumballMachine.model.TransitionRequest;
 import edu.iu.habahram.GumballMachine.model.TransitionResult;
 import edu.iu.habahram.GumballMachine.repository.IGumballRepository;
@@ -59,6 +60,15 @@ public class GumballMachineController {
     public TransitionResult turnCrank(@RequestBody TransitionRequest req) {
         try {
             return gumballService.turnCrank(req.id());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PutMapping("/refill")
+    public TransitionResult refill(@RequestBody RefillRequest req) {
+        try {
+            return gumballService.refill(req.id(), req.count());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

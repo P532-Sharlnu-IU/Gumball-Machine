@@ -9,4 +9,7 @@ public interface IGumballMachine {
     String getTheStateName();
 
     void releaseBall();
+
+    TransitionResult refill(int count);
+    void addGumballs(int count);
 }
